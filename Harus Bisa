@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --btn-width: 140px;
+    --btn-height: 46px;
+    --btn-font: 16px;
+}
+
+/* ================= BASE ================= */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe6eb, #fff0f5);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    background: white;
+    padding: 40px 28px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+}
+
+h1 {
+    color: #ff4d6d;
+    margin-bottom: 24px;
+    font-size: clamp(20px, 4vw, 28px);
+}
+
+.tease {
+    min-height: 22px;
+    color: #ff6f91;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+/* ================= BUTTON AREA ================= */
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    justify-items: center;
+}
+
+/* slot kanan agar simetris saat load */
+.no-placeholder {
+    width: var(--btn-width);
+    height: var(--btn-height);
+}
+
+button {
+    width: var(--btn-width);
+    height: var(--btn-height);
+    font-size: var(--btn-font);
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+}
+
+#yesBtn:hover {
+    background-color: #ff3355;
+    transform: scale(1.05);
+}
+
+#noBtn {
+    background-color: #e0e0e0;
+    color: #333;
+    position: fixed;
+    transition: left 0.35s ease, top 0.35s ease;
+}
+
+.result {
+    margin-top: 24px;
+    font-size: 20px;
+    color: #ff4d6d;
+    display: none;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* HP kecil */
+@media (max-width: 360px) {
+    :root {
+        --btn-width: 110px;
+        --btn-height: 40px;
+        --btn-font: 14px;
+    }
+
+    .container {
+        padding: 30px 20px;
+    }
+}
+
+/* HP normal */
+@media (max-width: 480px) {
+    :root {
+        --btn-width: 120px;
+        --btn-height: 42px;
+        --btn-font: 15px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    :root {
+        --btn-width: 150px;
+        --btn-height: 48px;
+        --btn-font: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Will you be my Valentine? 💖</h1>
+
+    <div class="tease" id="teaseText"></div>
+
+    <div class="buttons">
+        <button id="yesBtn">Yes</button>
+        <div class="no-placeholder" id="noSlot"></div>
+    </div>
+
+    <div class="result" id="resultText">
+        YAYYY 💕 I knew it!!<br>
+        Happy Valentine 💘
+    </div>
+</div>
+
+<button id="noBtn">No</button>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const noSlot = document.getElementById("noSlot");
+const teaseText = document.getElementById("teaseText");
+const result = document.getElementById("resultText");
+
+let escapeCount = 0;
+
+const teaseMessages = [
+    "Ih kok mau nolak sih 😢",
+    "Yakin nih? 🤨",
+    "Eh kok lari? 😆",
+    "Udah deh, klik YES aja 💕",
+    "Capek tau ngejar kamu 😭",
+    "Plot twist: kamu nggak bisa nolak 😎"
+];
+
+// posisi awal NO tepat di slot kanan (responsive)
+function setInitialNoPosition() {
+    const rect = noSlot.getBoundingClientRect();
+    noBtn.style.left = rect.left + "px";
+    noBtn.style.top = rect.top + "px";
+}
+
+function moveNoButton() {
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    teaseText.textContent =
+        teaseMessages[escapeCount] || "Udah nyerah aja 😜";
+
+    escapeCount++;
+}
+
+window.addEventListener("load", setInitialNoPosition);
+window.addEventListener("resize", setInitialNoPosition);
+
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
+
+yesBtn.addEventListener("click", () => {
+    result.style.display = "block";
+    teaseText.textContent = "";
+    noBtn.style.display = "none";
+});
+</script>
+
+</body>
+</html>
